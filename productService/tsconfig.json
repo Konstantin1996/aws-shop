@@ -4,8 +4,9 @@
     "removeComments": true,
     "moduleResolution": "node",
     "noUnusedLocals": true,
-    "noUnusedParameters": true,
+    "noUnusedParameters": false,
     "sourceMap": true,
+    "resolveJsonModule": true,
     "target": "es2017",
     "outDir": "lib"
   },

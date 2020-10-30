@@ -1,8 +1,8 @@
-import { APIGatewayProxyHandler } from 'aws-lambda';
+import { APIGatewayProxyHandler, APIGatewayProxyEvent, Context } from 'aws-lambda';
 import 'source-map-support/register';
 import products from './mocks/products.json';
 
-export const getProductsList: APIGatewayProxyHandler = async () => {
+export const getProductsList: APIGatewayProxyHandler = async (event: APIGatewayProxyEvent, context: Context) => {
 
   return {
     statusCode: 200,
