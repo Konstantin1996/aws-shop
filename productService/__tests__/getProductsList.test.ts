@@ -1,4 +1,5 @@
-import { getProductsList, getProductsById } from '../handler';
+import { getProductsList } from '../modules/getProductsList';
+import { getProductsById } from '../modules/getProductsById';
 import { APIGatewayProxyEvent } from 'aws-lambda';
 
 const successResponseWithArray = {
