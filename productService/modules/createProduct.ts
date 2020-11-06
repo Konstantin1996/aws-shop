@@ -4,7 +4,8 @@ import connectToDb from '../helpers/connectToDb';
 export const createProduct: APIGatewayProxyHandler = async (event) => {
   try {
     const client = await connectToDb();
-    const { title, description, price, imagelink } = event.body;
+    const body = JSON.parse(event.body);
+    const { title, description, price, imagelink } = body;
     console.log(`method createProduct was called with: title ${title}; description ${description}; price ${price}; imagelink ${imagelink}`);
 
     const query = {
@@ -13,6 +14,8 @@ export const createProduct: APIGatewayProxyHandler = async (event) => {
     }
 
     const { rowCount } = await client.query(query);
+
+    const { rows } = await client.query('select * from products;');
 
     console.log('product was created');
 
@@ -24,7 +27,8 @@ export const createProduct: APIGatewayProxyHandler = async (event) => {
       },
       body: JSON.stringify(
         {
-          newProduct: rowCount,
+          productAdded: rowCount,
+          products: rows
         }
       ),
     }
