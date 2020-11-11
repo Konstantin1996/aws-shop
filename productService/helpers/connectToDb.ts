@@ -1,4 +1,5 @@
 import { Client } from 'pg';
+import { createResponse } from '../helpers/createResponse';
 
 const { PG_HOST, PG_PORT_UPDATED, PG_DATABASE, PG_USERNAME, PG_PASSWORD } = process.env;
 const dbOptions = {
@@ -18,15 +19,6 @@ export default async () => {
     return client;
   } catch(error) {
     console.log('something was wrong with connection: ', error);
-    return {
-      statusCode: 500,
-      headers: {
-        "Access-Control-Allow-Origin": "*",
-        "Access-Control-Allow-Credentials": true
-      },
-      body: JSON.stringify({
-        status: 500, description: String(error),
-      })
-    }
+    return createResponse(500, { error });
   }
 }
