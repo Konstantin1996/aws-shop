@@ -1,34 +1,37 @@
 import { APIGatewayProxyHandler } from 'aws-lambda';
-import products from '../mocks/products.json';
+import { PRODUCT_QUERY } from '../queries/index';
+import { createResponse } from '../helpers/createResponse';
+import connectToDb from '../helpers/connectToDb';
 
 export const getProductsById: APIGatewayProxyHandler = async (event, _context) => {
+  const client = await connectToDb();
+
   try {
+    console.log('getProductsById ', event);
     const { productId } = event.pathParameters;
 
-    const searchedProduct = products.find(product => product.id === productId);
-
-    if(!searchedProduct) {
-      throw new Error('No such product');
+    const getProductByIdQuery = {
+      text: PRODUCT_QUERY.GET_PRODUCT_BY_ID,
+      values: [productId]
     }
 
-    return {
-      statusCode: 200,
-      headers: {
-        'Access-Control-Allow-Origin': '*',
-        'Access-Control-Allow-Credentials': true,
-      },
-      body: JSON.stringify(
-        {
-          products: searchedProduct,
-        }
-      ),
-    };
-  } catch(err) {
-    return {
-      statusCode: 404,
-      body: JSON.stringify({
-        status: 404, description: String(err)
-      })
+    const { rows: searchedProduct } = await client.query(getProductByIdQuery);
+    console.log('searchedProduct: ', searchedProduct);
+
+    console.log(`method getProductsById was called with next pathParameters: productId ${productId}`);
+
+    if(!searchedProduct.length) {
+      console.log('product was not found');
+
+      return createResponse(404, { error: 'Product not found' });
     }
+
+    return createResponse(200, { products: searchedProduct })
+  } catch(error) {
+    console.log('error in getProductsById: ', error);
+
+    return createResponse(500, { error });
+  } finally {
+    await client.end();
   }
 };
