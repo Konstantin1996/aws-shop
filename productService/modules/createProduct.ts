@@ -13,8 +13,8 @@ export const createProduct: APIGatewayProxyHandler = async (event) => {
     await client.query('BEGIN');
 
     const body = JSON.parse(event.body) as Product;
-    let { title, description, price, imagelink } = body;
-    console.log(`method createProduct was called with: title ${title}; description ${description}; price ${price}; imagelink ${imagelink}`);
+    let { title, description, price, imagelink, count } = body;
+    console.log(`method createProduct was called with: title ${title}; description ${description}; price ${price}; imagelink ${imagelink}; count ${count}`);
 
     if(!imagelink) {
       imagelink = 'http://pngimg.com/uploads/cat/cat_PNG50525.png';
@@ -30,7 +30,7 @@ export const createProduct: APIGatewayProxyHandler = async (event) => {
 
     const insertIntoStocksQuery = {
       text: PRODUCT_QUERY.INSERT_INTO_STOCKS,
-      values: [productId, 1]
+      values: [productId, count]
     }
 
     console.log(`product with id ${productId} was created`);
