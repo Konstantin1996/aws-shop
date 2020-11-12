@@ -13,8 +13,12 @@ export const createProduct: APIGatewayProxyHandler = async (event) => {
     await client.query('BEGIN');
 
     const body = JSON.parse(event.body) as Product;
-    const { title, description, price, imagelink } = body;
+    let { title, description, price, imagelink } = body;
     console.log(`method createProduct was called with: title ${title}; description ${description}; price ${price}; imagelink ${imagelink}`);
+
+    if(!imagelink) {
+      imagelink = 'http://pngimg.com/uploads/cat/cat_PNG50525.png';
+    }
 
     const insertIntoProductQuery = {
       text: PRODUCT_QUERY.INSERT_INTO_PRODUCTS,
