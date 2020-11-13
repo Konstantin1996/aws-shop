@@ -1,5 +1,5 @@
 import { Client } from 'pg';
-import { createResponse } from '../helpers/createResponse';
+import { createResponse } from './createResponse';
 
 const { PG_HOST, PG_PORT_UPDATED, PG_DATABASE, PG_USERNAME, PG_PASSWORD } = process.env;
 const dbOptions = {
