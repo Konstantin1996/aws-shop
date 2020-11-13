@@ -1,8 +1,8 @@
 import { APIGatewayProxyHandler } from 'aws-lambda';
-import { createResponse } from '../helpers/createResponse';
+import { createResponse } from '../../helpers/createResponse';
 import { Product } from '../models/Product';
 import { PRODUCT_QUERY } from '../queries/index';
-import connectToDb from '../helpers/connectToDb';
+import connectToDb from '../../helpers/connectToDb';
 
 export const createProduct: APIGatewayProxyHandler = async (event) => {
   const client = await connectToDb();
