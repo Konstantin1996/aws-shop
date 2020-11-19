@@ -2,7 +2,7 @@ import type { Serverless } from 'serverless/aws';
 
 const serverlessConfiguration: Serverless = {
   service: {
-    name: 'productservicetypescript',
+    name: 'import-service',
     // app and org for use with dashboard.serverless.com
     // app: your-app-name,
     // org: your-org-name,
@@ -43,50 +43,36 @@ const serverlessConfiguration: Serverless = {
     ],
     environment: {
       AWS_NODEJS_CONNECTION_REUSE_ENABLED: '1',
-      PG_HOST: process.env.PG_HOST,
-      PG_PORT: process.env.PG_PORT,
-      PG_DATABASE: process.env.PG_DATABASE,
-      PG_USERNAME: process.env.PG_USERNAME,
-      PG_PASSWORD: process.env.PG_PASSWORD
     },
   },
   functions: {
-    getProductsList: {
-      handler: 'handler.getProductsList',
+    importProductsFile: {
+      handler: 'handler.importProductsFile',
       events: [
         {
           http: {
             method: 'get',
-            path: 'products',
-            cors: true
-          },
-        }
-      ]
-    },
-    getProductsById: {
-      handler: 'handler.getProductsById',
-      events: [
-        {
-          http: {
-            method: 'get',
-            path: 'products/{productId}',
-            cors: true
+            path: '/import',
+            cors: true,
           }
         }
       ]
     },
-    createProduct: {
-      handler: 'handler.createProduct',
+    importFileParser: {
+      handler: 'handler.importFileParser',
       events: [
         {
-          http: {
-            method: 'post',
-            path: 'products/',
-            cors: true
+          s3: {
+            bucket: 'importservice-bucket',
+            event: 's3:ObjectCreated:*',
+            // here we can define specific folders to analize them only
+            rules: [{ prefix: 'uploaded/', suffix: '.csv'}],
+            // This flag confirm that bucket already exist in s3 
+            existing: true
           }
         }
       ]
-    },
+    }
   }
 }
 

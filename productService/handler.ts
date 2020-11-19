@@ -1,7 +1,7 @@
 import 'source-map-support/register';
-import { getProductsList } from './modules/getProductsList';
-import { getProductsById } from './modules/getProductsById';
-import { createProduct } from './modules/createProduct';
+import { getProductsList } from './src/modules/getProductsList';
+import { getProductsById } from './src/modules/getProductsById';
+import { createProduct } from './src/modules/createProduct';
 
 export {
   getProductsList,

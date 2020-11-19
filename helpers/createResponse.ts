@@ -1,4 +1,4 @@
-export function createResponse(statusCode: number, body: any) {
+export function createResponse(statusCode: number, body?: any) {
   return {
     statusCode,
     headers: {
