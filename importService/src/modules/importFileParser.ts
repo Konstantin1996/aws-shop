@@ -1,6 +1,6 @@
 import AWS from 'aws-sdk';
 import csv from 'csv-parser';
-import { createResponse } from '../../helpers/createResponse';
+import { createResponse } from '../../../helpers/createResponse';
 const BUCKET = 'importservice-bucket';
 
 export const importFileParser = (event) => {

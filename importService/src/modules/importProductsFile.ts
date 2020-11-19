@@ -1,8 +1,9 @@
 import AWS from 'aws-sdk';
-import { createResponse } from '../../helpers/createResponse';
+import { createResponse } from '../../../helpers/createResponse';
 const BUCKET = 'importservice-bucket';
 
 export const importProductsFile = async (event) => {
+  console.log('ITS ME');
   console.log('importProductFile', event);
 
   const { queryStringParameters } = event;
