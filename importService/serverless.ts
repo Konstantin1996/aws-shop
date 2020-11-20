@@ -39,11 +39,58 @@ const serverlessConfiguration: Serverless = {
           (change bucket policy and block public access should be turned off)
         */
         Resource: 'arn:aws:s3:::importservice-bucket/*'
+      },
+      {
+        Effect: 'Allow',
+        Action: 'sqs:*',
+        Resource: {
+          "Fn::GetAtt": ["SQSQueue", "Arn"]
+        }
       }
     ],
     environment: {
       AWS_NODEJS_CONNECTION_REUSE_ENABLED: '1',
+      SQS_URL: process.env.SQS_URL,
     },
+  },
+  resources: {
+    // To create queue programically the resource should be provided
+    Resources: {
+      "SQSQueue": {
+        Type: "AWS::SQS::Queue",
+        Properties: {
+          "QueueName": "catalogItemsQueueSQS"
+        }
+      },
+      "SNSTopic": {
+        Type: "AWS::SNS::Topic",
+        Properties: {
+          "TopicName": "createProductTopicSNS"
+        }
+      },
+      "SNSSubscription": {
+        Type: "AWS::SNS::Subscription",
+        Properties: {
+          Endpoint: "jovagim190@ffeast.com",
+          Protocol: "email",
+          TopicArn: {
+            Ref: "SNSTopic"
+          }
+        }
+      }
+    },
+    Outputs: {
+      SQSQueueUrl: {
+        Value: {
+          Ref: "SQSQueue"
+        }
+      },
+      SQSQueueArn: {
+        Value: {
+          "Fn::GetAtt": ["SQSQueue", "Arn"]
+        }
+      }
+    }
   },
   functions: {
     importProductsFile: {
