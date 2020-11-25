@@ -2,7 +2,7 @@ import type { Serverless } from 'serverless/aws';
 
 const serverlessConfiguration: Serverless = {
   service: {
-    name: 'productservicetypescript',
+    name: 'productservicenew',
     // app and org for use with dashboard.serverless.com
     // app: your-app-name,
     // org: your-org-name,
@@ -39,6 +39,11 @@ const serverlessConfiguration: Serverless = {
           (change bucket policy and block public access should be turned off)
         */
         Resource: 'arn:aws:s3:::importservice-bucket/*'
+      },
+      {
+        Effect: "Allow",
+        Action: "sns:*",
+        Resource: "arn:aws:sns:eu-west-1:950839913722:createProductTopicsns"
       }
     ],
     environment: {
@@ -47,7 +52,28 @@ const serverlessConfiguration: Serverless = {
       PG_PORT: process.env.PG_PORT,
       PG_DATABASE: process.env.PG_DATABASE,
       PG_USERNAME: process.env.PG_USERNAME,
-      PG_PASSWORD: process.env.PG_PASSWORD
+      PG_PASSWORD: process.env.PG_PASSWORD,
+      SQS_URL: process.env.SQS_URL,
+    },
+  },
+  resources: {
+    Resources: {
+      "SNSTopic": {
+        Type: "AWS::SNS::Topic",
+        Properties: {
+          "TopicName": "createProductTopicsns"
+        }
+      },
+      "SNSSubscription": {
+        Type: "AWS::SNS::Subscription",
+        Properties: {
+          Endpoint: "wha@extraale.com",
+          Protocol: "email",
+          TopicArn: {
+            Ref: "SNSTopic"
+          }
+        }
+      }
     },
   },
   functions: {
@@ -86,6 +112,17 @@ const serverlessConfiguration: Serverless = {
           }
         }
       ]
+    },
+    catalogBatchProcess: {
+      handler: 'handler.catalogBatchProcess',
+      events: [
+        { 
+          sqs: {
+            arn: "arn:aws:sqs:eu-west-1:950839913722:catalogItemsQueueSQS", 
+            batchSize: 5
+          }
+        }
+      ],
     },
   }
 }
