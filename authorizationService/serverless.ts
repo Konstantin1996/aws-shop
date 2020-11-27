@@ -15,10 +15,12 @@ const serverlessConfiguration: Serverless = {
     }
   },
   // Add the serverless-webpack plugin
-  plugins: ['serverless-webpack'],
+  plugins: ['serverless-webpack', 'serverless-dotenv-plugin'],
   provider: {
     name: 'aws',
     runtime: 'nodejs12.x',
+    region: 'eu-west-1',
+    stage: 'dev',
     apiGateway: {
       minimumCompressionSize: 1024,
     },
@@ -27,13 +29,13 @@ const serverlessConfiguration: Serverless = {
     },
   },
   functions: {
-    hello: {
-      handler: 'handler.hello',
+    basicAuthorizer: {
+      handler: 'handler.basicAuthorizer',
       events: [
         {
           http: {
             method: 'get',
-            path: 'hello',
+            path: 'basic',
           }
         }
       ]
