@@ -101,6 +101,9 @@ const serverlessConfiguration: Serverless = {
             method: 'get',
             path: '/import',
             cors: true,
+            authorizer: {
+              arn: 'arn:aws:lambda:eu-west-1:950839913722:function:authorizationservice-dev-basicAuthorizer:27'
+            }
           }
         }
       ]
