@@ -1,0 +1,11 @@
+# We do not needed our node_modules because docker create them inside when run npm inside
+**/node_modules
+
+# We do not need test because we do not have any git hooks that will run them
+/test
+
+# Exclude any log files, Dockerfile itself and git
+README*
+*log
+.git
+Dockerfile
